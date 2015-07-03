@@ -1,46 +1,33 @@
-react-hot-boilerplate
-=====================
+react-overlay-popup
+===================
 
-The minimal dev environment to enable live-editing React components.
+Overlay and Popup components for React. Brought to you by Taskworld Inc.
 
-### Usage
 
-```
-npm install
-npm start
-open http://localhost:3000
-```
+Synopsis
+--------
 
-Now edit `src/App.js`.  
-Your changes will appear without reloading the browser like in [this video](http://vimeo.com/100010922).
-
-### Linting
-
-This boilerplate project includes React-friendly ESLint configuration.
-
-```
-npm run lint
+```jsx
+const { Overlay, Popup } = require('react-overlay-popup');
 ```
 
-### Using `0.0.0.0` as Host
+See: [src/App.js](src/App.js) for example.
 
-You may want to change the host in `server.js` and `webpack.config.js` from `localhost` to `0.0.0.0` to allow access from same WiFi network. This is not enabled by default because it is reported to cause problems on Windows. This may also be useful if you're using a VM.
 
-### Missing Features
+Overlay
+-------
 
-This boilerplate is purposefully simple to show the minimal configuration for React Hot Loader. For a real project, you'll want to add a separate config for production with hot reloading disabled and minification enabled. You'll also want to add a router, styles and maybe combine dev server with an existing server. This is out of scope of this boilerplate, but you may want to look into [other starter kits](https://github.com/gaearon/react-hot-loader/blob/master/docs/README.md#starter-kits).
+Anything inside `<Overlay></Overlay>` will be added to a separate DOM tree appended to `document.body`.
 
-### Dependencies
 
-* React
-* Webpack
-* [webpack-dev-server](https://github.com/webpack/webpack-dev-server)
-* [babel-loader](https://github.com/babel/babel-loader)
-* [react-hot-loader](https://github.com/gaearon/react-hot-loader)
+Popup
+-----
 
-### Resources
+A special kind of Overlay that automatically positions itself relative to its parent.
+The position is specified through `strategy` attribute.
 
-* [Demo video](http://vimeo.com/100010922)
-* [react-hot-loader on Github](https://github.com/gaearon/react-hot-loader)
-* [Integrating JSX live reload into your workflow](http://gaearon.github.io/react-hot-loader/getstarted/)
-* Ping dan_abramov on Twitter or #reactjs IRC
+
+Acknowledgement
+---------------
+
+This project is based off [@glenjamin's fork of react-hot-boilerplate](https://github.com/gaearon/react-hot-boilerplate/pull/28) which makes it super-fast to start developing a new React web app. This fork uses [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware) to make it easier to work with Webpack's Hot Code Reloading.
