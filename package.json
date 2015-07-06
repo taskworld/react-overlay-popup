@@ -1,6 +1,6 @@
 {
   "name": "react-overlay-popup",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Overlay and popup components for React.",
   "scripts": {
     "start": "node server.js",
