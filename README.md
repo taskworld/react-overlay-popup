@@ -27,7 +27,7 @@ Popup
 A special kind of Overlay that automatically positions itself relative to its parent.
 The position is specified through the `strategy` prop.
 
-![docs/magic.png](The strategy and the formula behind the magic.)
+![The strategy and the formula behind the magic.](docs/magic.png)
 
 The `gap` prop specifies how far should the popup be to its parent.
 
