@@ -43,7 +43,6 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(rect.left, rect.width,  childWidth,  parentX, childX, window.innerWidth,  gapX * options.gap);
     var top  = calculateWithFallback(rect.top,  rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap);
 
-    child.style.position = 'fixed';
     child.style.visibility = 'visible';
     child.style.left = left + 'px';
     child.style.top  = top + 'px';
@@ -121,7 +120,9 @@ var Popup = React.createClass({
 
     return (
       <Overlay>
-        <div className={Popup.POPUP_CLASS_NAME} ref='popup' style={{ visibility: 'hidden' }}>
+        <div className={Popup.POPUP_CLASS_NAME}
+         ref='popup'
+         style={{ visibility: 'hidden', position: 'fixed' }}>
           {this.props.children}
         </div>
       </Overlay>
