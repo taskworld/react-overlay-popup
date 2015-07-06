@@ -56,7 +56,7 @@ module.exports = React.createClass({
 
             {this.state.strategy}
 
-            <Popup strategy={this.state.strategy}>
+            <Popup strategy={this.state.strategy} gap={4}>
               <div style={{ background: '#def', border: '1px solid #ccc', width: '160px' }}>
                 I am a menu!<br />
                 Edit<br />

@@ -5,43 +5,43 @@ var Overlay = require('./Overlay');
 
 var _strategies = { };
 
-function calculate (vp, lp, lc, kp, kc) {
+function calculate (vp, lp, lc, kp, kc, Δv) {
 
-  return vp + kp * lp - kc * lc;
+  return vp + kp * lp - kc * lc + Δv;
 }
 
-function calculateWithFallback (vp, lp, lc, kp, kc, vm) {
+function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
 
   var primary = kp !== kc;
-  var vc = calculate(vp, lp, lc, kp, kc);
+  var vc = calculate(vp, lp, lc, kp, kc, Δv);
 
   if (primary) {
     if ((kp > 0.5 && vc + lc > vm) || (kp < 0.5 && vc < 0)) {
-      return calculate(vp, lp, lc, 1 - kp, 1 - kc);
+      return calculate(vp, lp, lc, 1 - kp, 1 - kc, -Δv);
     } else {
       return vc;
     }
   } else {
     if (vc < 0) {
-      return calculate(vp, lp, lc, 0, 0);
+      return calculate(vp, lp, lc, 0, 0, Δv);
     } else if (vc + lc > vm) {
-      return calculate(vp, lp, lc, 1, 1);
+      return calculate(vp, lp, lc, 1, 1, Δv);
     } else {
       return vc;
     }
   }
 }
 
-function createStrategy (parentX, childX, parentY, childY) {
+function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
 
-  return function (parent, child) {
+  return function (parent, child, options) {
 
     var rect        = parent.getBoundingClientRect();
     var childWidth  = child.offsetWidth;
     var childHeight = child.offsetHeight;
 
-    var left = calculateWithFallback(rect.left, rect.width,  childWidth,  parentX, childX, window.innerWidth);
-    var top  = calculateWithFallback(rect.top,  rect.height, childHeight, parentY, childY, window.innerHeight);
+    var left = calculateWithFallback(rect.left, rect.width,  childWidth,  parentX, childX, window.innerWidth,  gapX * options.gap);
+    var top  = calculateWithFallback(rect.top,  rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap);
 
     child.style.position = 'fixed';
     child.style.visibility = 'visible';
@@ -50,31 +50,32 @@ function createStrategy (parentX, childX, parentY, childY) {
   };
 }
 
-_strategies['top left']       = createStrategy(0,   0,   0,   1);
+_strategies['top left']       = createStrategy(0,   0,   0,   1,    0,  -1);
 _strategies['top']            =
-_strategies['top center']     = createStrategy(0.5, 0.5, 0,   1);
-_strategies['top right']      = createStrategy(1,   1,   0,   1);
+_strategies['top center']     = createStrategy(0.5, 0.5, 0,   1,    0,  -1);
+_strategies['top right']      = createStrategy(1,   1,   0,   1,    0,  -1);
 
-_strategies['bottom left']    = createStrategy(0,   0,   1,   0);
+_strategies['bottom left']    = createStrategy(0,   0,   1,   0,    0,  1);
 _strategies['bottom']         =
-_strategies['bottom center']  = createStrategy(0.5, 0.5, 1,   0);
-_strategies['bottom right']   = createStrategy(1,   1,   1,   0);
+_strategies['bottom center']  = createStrategy(0.5, 0.5, 1,   0,    0,  1);
+_strategies['bottom right']   = createStrategy(1,   1,   1,   0,    0,  1);
 
-_strategies['left top']       = createStrategy(0,   1,   0,   0);
+_strategies['left top']       = createStrategy(0,   1,   0,   0,   -1,  0);
 _strategies['left']           =
-_strategies['left center']    = createStrategy(0,   1,   0.5, 0.5);
-_strategies['left bottom']    = createStrategy(0,   1,   1,   1);
+_strategies['left center']    = createStrategy(0,   1,   0.5, 0.5, -1,  0);
+_strategies['left bottom']    = createStrategy(0,   1,   1,   1,   -1,  0);
 
-_strategies['right top']      = createStrategy(1,   0,   0,   0);
+_strategies['right top']      = createStrategy(1,   0,   0,   0,    1,  0);
 _strategies['right']          =
-_strategies['right center']   = createStrategy(1,   0,   0.5, 0.5);
-_strategies['right bottom']   = createStrategy(1,   0,   1,   1);
+_strategies['right center']   = createStrategy(1,   0,   0.5, 0.5,  1,  0);
+_strategies['right bottom']   = createStrategy(1,   0,   1,   1,    1,  0);
 
 var Popup = React.createClass({
 
   propTypes: {
     strategy: React.PropTypes.string.isRequired,
     children: React.PropTypes.node,
+    gap:      React.PropTypes.number,
   },
 
   componentDidMount: function () {
@@ -111,8 +112,8 @@ var Popup = React.createClass({
         strategy = _strategies[this.props.strategy];
       }
 
-      invar(typeof strategy === 'function', 'Strategy must be function.');
-      strategy(parent, child);
+      invar(typeof strategy === 'function', 'Strategy must be a function.');
+      strategy(parent, child, { gap: this.props.gap || 0 });
     }
   },
 
@@ -120,7 +121,7 @@ var Popup = React.createClass({
 
     return (
       <Overlay>
-        <div className='tw-popup' ref='popup' style={{ visibility: 'hidden' }}>
+        <div className={Popup.POPUP_CLASS_NAME} ref='popup' style={{ visibility: 'hidden' }}>
           {this.props.children}
         </div>
       </Overlay>
@@ -128,5 +129,7 @@ var Popup = React.createClass({
   },
 
 });
+
+Popup.POPUP_CLASS_NAME = 'tw-popup';
 
 module.exports = Popup;

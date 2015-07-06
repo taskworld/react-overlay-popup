@@ -3,17 +3,6 @@ var React = require('react');
 
 var _layer;
 
-function getOverlayLayer () {
-
-  if (!_layer) {
-    _layer = document.createElement('div');
-    _layer.className = 'tw-overlay-layer';
-    document.body.appendChild(_layer);
-  }
-
-  return _layer;
-}
-
 var Overlay = React.createClass({
 
   propTypes: {
@@ -44,11 +33,11 @@ var Overlay = React.createClass({
 
     if (!this._element) {
       this._element = document.createElement('div');
-      this._element.className = 'tw-overlay-layer__item';
-      getOverlayLayer().appendChild(this._element);
+      this._element.className = Overlay.CONTAINER_CLASS_NAME;
+      document.body.appendChild(this._element);
     }
     var overlay = (
-      <div className='tw-overlay'>
+      <div className={Overlay.OVERLAY_CLASS_NAME}>
         {this.props.children}
       </div>
     );
@@ -63,5 +52,8 @@ var Overlay = React.createClass({
   },
 
 });
+
+Overlay.CONTAINER_CLASS_NAME = 'tw-overlay-container';
+Overlay.OVERLAY_CLASS_NAME = 'tw-overlay';
 
 module.exports = Overlay;
