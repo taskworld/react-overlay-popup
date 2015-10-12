@@ -45,6 +45,6 @@
     "webpack-hot-middleware": "^1.1.0"
   },
   "peerDependencies": {
-    "react": "^0.13.0"
+    "react": ">=0.13.0"
   }
 }

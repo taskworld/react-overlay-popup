@@ -1,6 +1,6 @@
 
 var React = require('react');
-var invar = require('react/lib/invariant');
+var invar = require('invariant');
 var Overlay = require('./Overlay');
 
 var _strategies = { };
