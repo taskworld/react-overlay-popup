@@ -43,10 +43,23 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(rect.left, rect.width,  childWidth,  parentX, childX, window.innerWidth,  gapX * options.gap);
     var top  = calculateWithFallback(rect.top,  rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap);
 
-    child.style.visibility = 'visible';
-    child.style.left = left + 'px';
-    child.style.top  = top + 'px';
+    setPosition(child, left, top);
   };
+}
+
+function createStrategyFromFunction (positionFunc) {
+
+  return function (parent, child, options) {
+    var position = positionFunc(parent, child, options);
+    setPosition(child, position.left, position.top);
+  }
+}
+
+function setPosition (child, left, top) {
+
+  child.style.visibility = 'visible';
+  child.style.left = left + 'px';
+  child.style.top  = top + 'px';
 }
 
 _strategies['top left']       = createStrategy(0,   0,   0,   1,    0,  -1);
@@ -72,7 +85,10 @@ _strategies['right bottom']   = createStrategy(1,   0,   1,   1,    1,  0);
 var Popup = React.createClass({
 
   propTypes: {
-    strategy: React.PropTypes.string.isRequired,
+    strategy: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.func
+    ]),
     children: React.PropTypes.node,
     gap:      React.PropTypes.number,
   },
@@ -101,6 +117,10 @@ var Popup = React.createClass({
     if (parent && child) {
 
       var strategy;
+
+      if (typeof this.props.strategy === 'function') {
+        strategy = createStrategyFromFunction(this.props.strategy);
+      }
 
       if (typeof this.props.strategy === 'string') {
         invar(
