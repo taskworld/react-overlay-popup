@@ -75,6 +75,7 @@ var Popup = React.createClass({
     strategy: React.PropTypes.string.isRequired,
     children: React.PropTypes.node,
     gap:      React.PropTypes.number,
+    onPosition: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -101,6 +102,8 @@ var Popup = React.createClass({
     if (parent && child) {
 
       var strategy;
+
+      if (typeof this.props.onPosition === 'function') strategy = this.props.onPosition
 
       if (typeof this.props.strategy === 'string') {
         invar(
