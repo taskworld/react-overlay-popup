@@ -50,7 +50,7 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
 function createStrategyFromFunction (positionFunc) {
 
   return function (parent, child, options) {
-    var position = positionFunc();
+    var position = positionFunc(parent, child, options);
     setPosition(child, position.left, position.top);
   }
 }
