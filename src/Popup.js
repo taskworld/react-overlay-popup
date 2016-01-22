@@ -72,10 +72,12 @@ _strategies['right bottom']   = createStrategy(1,   0,   1,   1,    1,  0);
 var Popup = React.createClass({
 
   propTypes: {
-    strategy: React.PropTypes.string.isRequired,
+    strategy: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.func
+    ]),
     children: React.PropTypes.node,
     gap:      React.PropTypes.number,
-    onPosition: React.PropTypes.func
   },
 
   componentDidMount: function () {
@@ -103,7 +105,7 @@ var Popup = React.createClass({
 
       var strategy;
 
-      if (typeof this.props.onPosition === 'function') strategy = this.props.onPosition;
+      if (typeof this.props.strategy === 'function') strategy = this.props.strategy;
 
       if (typeof this.props.strategy === 'string') {
         invar(
