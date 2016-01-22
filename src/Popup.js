@@ -103,7 +103,7 @@ var Popup = React.createClass({
 
       var strategy;
 
-      if (typeof this.props.onPosition === 'function') strategy = this.props.onPosition
+      if (typeof this.props.onPosition === 'function') strategy = this.props.onPosition;
 
       if (typeof this.props.strategy === 'string') {
         invar(
