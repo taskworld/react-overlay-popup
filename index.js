@@ -2,5 +2,5 @@
 module.exports = {
 
   Overlay: require('./lib/Overlay'),
-  Popup:   require('./lib/Popup'),
+  Popup:   require('./lib/Popup')
 };
