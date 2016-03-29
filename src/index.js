@@ -1,4 +1,5 @@
-var React = require('react');
-var App = require('./App');
 
-React.render(<App />, document.getElementById('root'));
+import Overlay from './Overlay'
+import Popup from './Popup'
+
+export { Popup, Overlay }

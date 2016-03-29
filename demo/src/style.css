@@ -1,0 +1,9 @@
+.Demo {
+  border: 2px solid #65B8BE;
+  padding: 1em;
+  font-family: sans-serif;
+}
+
+.Demo h1 {
+  margin-top: 0;
+}

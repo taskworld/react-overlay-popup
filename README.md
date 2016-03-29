@@ -1,5 +1,8 @@
-react-overlay-popup
-===================
+# react-overlay-popup
+
+[![Travis][build-badge]][build]
+[![npm package][npm-badge]][npm]
+[![Coveralls][coveralls-badge]][coveralls]
 
 Overlay and Popup components for React. Brought to you by Taskworld Inc.
 
@@ -32,7 +35,44 @@ The position is specified through the `strategy` prop.
 The `gap` prop specifies how far should the popup be to its parent.
 
 
-Acknowledgement
----------------
 
-This project is based off [@glenjamin's fork of react-hot-boilerplate](https://github.com/gaearon/react-hot-boilerplate/pull/28) which makes it super-fast to start developing a new React web app. This fork uses [webpack-hot-middleware](https://github.com/glenjamin/webpack-hot-middleware) to make it easier to work with Webpack's Hot Code Reloading.
+## Prerequisites
+
+You will need the following things properly installed on your computer.
+
+* [Git](http://git-scm.com/)
+* [Node.js](http://nodejs.org/) (with npm)
+* [nwb](https://github.com/insin/nwb/) - `npm install -g nwb`
+
+
+## Installation
+
+* `git clone <repository-url>` this repository
+* change into the new directory
+* `npm install`
+
+
+## Running / Development
+
+* `nwb serve` will run the component's demo app
+* Visit the demo at [http://localhost:3000](http://localhost:3000)
+
+
+### Running Tests
+
+* `nwb test` will run the tests once
+* `nwb test --server` will run the tests on every change
+
+
+### Building
+
+* `nwb build`
+
+[build-badge]: https://img.shields.io/travis/user/repo/master.svg?style=flat-square
+[build]: https://travis-ci.org/user/repo
+
+[npm-badge]: https://img.shields.io/npm/v/npm-package.svg?style=flat-square
+[npm]: https://www.npmjs.org/package/npm-package
+
+[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.svg?style=flat-square
+[coveralls]: https://coveralls.io/github/user/repo
