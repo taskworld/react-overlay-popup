@@ -2,7 +2,8 @@
 
 [![Travis][build-badge]][build]
 [![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
+[![codecov.io](https://codecov.io/github/taskworld/react-overlay-popup/coverage.svg?branch=master)](https://codecov.io/github/taskworld/react-overlay-popup?branch=master)
+
 
 Overlay and Popup components for React. Brought to you by Taskworld Inc.
 
@@ -73,6 +74,3 @@ You will need the following things properly installed on your computer.
 
 [npm-badge]: https://img.shields.io/npm/v/react-overlay-popup.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/react-overlay-popup
-
-[coveralls-badge]: https://img.shields.io/coveralls/taskworld/react-overlay-popup/master.svg?style=flat-square
-[coveralls]: https://coveralls.io/github/taskworld/react-overlay-popup
