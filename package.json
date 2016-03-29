@@ -36,11 +36,21 @@
     "react-dom": "0.14.x",
     "standard": "^6.0.5"
   },
-  "author": "",
-  "homepage": "",
+  "author": "Thai Pangsakulyanont @ Taskworld <thai.p@taskworld.com>",
+  "homepage": "https://github.com/taskworld/react-overlay-popup#readme",
   "license": "MIT",
-  "repository": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taskworld/react-overlay-popup.git"
+  },
   "keywords": [
     "react-component"
-  ]
+  ],
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "bugs": {
+    "url": "https://github.com/taskworld/react-overlay-popup/issues"
+  }
 }
