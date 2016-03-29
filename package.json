@@ -1,6 +1,6 @@
 {
   "name": "react-overlay-popup",
-  "version": "3.0.0",
+  "version": "4.0.0-beta",
   "description": "Overlay and popup components for React.",
   "main": "lib/index.js",
   "jsnext:main": "es6/index.js",
