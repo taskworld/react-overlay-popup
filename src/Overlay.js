@@ -1,6 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 
+const renderSubtreeIntoContainer = ReactDOM.unstable_renderSubtreeIntoContainer
+
 var Overlay = React.createClass({
   propTypes: {
     children: React.PropTypes.node
@@ -34,7 +36,7 @@ var Overlay = React.createClass({
         {this.props.children}
       </div>
     )
-    ReactDOM.render(overlay, this._element)
+    renderSubtreeIntoContainer(this, overlay, this._element)
   },
 
   render: function () {
