@@ -30,6 +30,16 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   }
 }
 
+export function getActualStrategy(parentRectangle, childPosition) {
+    var actualStrategy = 'tw-strategy'
+    actualStrategy += childPosition.top > parentRectangle.top ? '-bottom' : '-top'
+    actualStrategy += (childPosition.left >= (parentRectangle.left - parentRectangle.width)) ? '-right' : '-left';
+
+    // TODO: strategy can be 1 out of 12. currently just figuring out 4 of them ^
+
+    return actualStrategy
+}
+
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
   return function (parent, child, options) {
     var rect = parent.getBoundingClientRect()
@@ -38,6 +48,8 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
 
     var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
     var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
+
+    child.className = 'tw-popup ' + getActualStrategy(rect, {top, left});
 
     setPosition(child, left, top)
   }
@@ -133,4 +145,4 @@ var Popup = React.createClass({
 
 Popup.POPUP_CLASS_NAME = 'tw-popup'
 
-module.exports = Popup
+export default Popup
