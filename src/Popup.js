@@ -10,8 +10,13 @@ function calculate (vp, lp, lc, kp, kc, Δv) {
 }
 
 function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
+
   var primary = kp !== kc
   var vc = calculate(vp, lp, lc, kp, kc, Δv)
+
+  // console.log(vc + lc === vp + lp);
+
+// console.log('vc, vp, lp, lc, kp, kc, vm, Δv', vc, vp, lp, lc, kp, kc, vm, Δv);
 
   if (primary) {
     if ((kp > 0.5 && vc + lc > vm) || (kp < 0.5 && vc < 0)) {
@@ -30,12 +35,58 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   }
 }
 
-export function getActualStrategy(parentRectangle, childPosition) {
-    var actualStrategy = 'tw-strategy'
-    actualStrategy += childPosition.top > parentRectangle.top ? '-bottom' : '-top'
-    actualStrategy += (childPosition.left >= (parentRectangle.left - parentRectangle.width)) ? '-right' : '-left';
+export function getActualStrategy(parentRectangle, childRectangle, gap) {
 
-    // TODO: strategy can be 1 out of 12. currently just figuring out 4 of them ^
+    var actualStrategy = 'tw-strategy'
+
+    console.log('parent', parentRectangle);
+    console.log('child', childRectangle);
+
+    console.log('gap', gap);
+
+    var left_ = Math.floor(childRectangle.left) + childRectangle.width + Math.abs(gap.x) == Math.floor(parentRectangle.left); // good
+    var _left = Math.floor(childRectangle.left) === Math.floor(parentRectangle.left); // good
+
+    var _right = Math.floor(childRectangle.left) + childRectangle.width === Math.floor(parentRectangle.right); // good
+    var right_ = Math.floor(childRectangle.left) - Math.abs(gap.x) === Math.floor(parentRectangle.right); // good
+
+    var bottom_ = Math.floor(parentRectangle.bottom) + Math.abs(gap.y) === Math.floor(childRectangle.top); // good
+    var _bottom = Math.floor(childRectangle.top) + childRectangle.height === Math.floor(parentRectangle.bottom); // good
+
+    var _top = Math.floor(childRectangle.top) === Math.floor(parentRectangle.top);
+    var top_ = Math.floor(childRectangle.top) + childRectangle.height + Math.abs(gap.y) === Math.floor(parentRectangle.top);
+
+    if (bottom_) {
+        console.log('bottom-');
+    }
+
+    if (_bottom) {
+        console.log('-bottom');
+    }
+
+    if(_right) {
+        console.log('-right');
+    }
+
+    if(right_) {
+        console.log('right-');
+    }
+
+    if(left_) {
+        console.log('left-');
+    }
+
+    if(_left) {
+        console.log('-left');
+    }
+
+    if(_top) {
+        console.log('-top')
+    }
+
+    if(top_) {
+        console.log('top-')
+    }
 
     return actualStrategy
 }
@@ -49,7 +100,10 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
     var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    child.className = 'tw-popup ' + getActualStrategy(rect, {top, left});
+    // child.className = 'tw-popup ' +
+    getActualStrategy(rect, {top, left, width: childWidth, height: childHeight}, {x: gapX * options.gap, y: gapY * options.gap})
+
+    // console.log('child.className', child.className)
 
     setPosition(child, left, top)
   }
