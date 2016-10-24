@@ -32,72 +32,45 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
 }
 
 /**
-*
-*/
+ * getActualPosition - positioning strategy only specified the preferred positioning
+ *                     of the child popup. When the popup is rendered, it might
+ *                     reposition to the closest strategy that allows it to still
+ *                     be rendered on screen.
+ *                     This method returns the actual positioning used (out of all
+ *                     the strategies available)
+ *
+ * @param  {ClientRect} parentRect - a ClientRect with left,top,right,bottom,
+                                     width, and height properties for the parent
+ * @param  {Object} ChildRect - an object with left,top,width, height for child / popup
+ * @param {Object} gap - an object with x and y absolute gap values (positive numbers)
+ * @return String - a string that identifies the actual positioning strategy used
+ */
 export function getActualPosition(parentRect, childRect, gap) {
 
-    var actualStrategy = 'tw-position-'
+    var actualPosition = 'tw-position',
+        childLeft = Math.floor(childRect.left),
+        childTop = Math.floor(childRect.top),
+        positionsMap = new Map(),
+        counter = 0
 
-    var childLeft = Math.floor(childRect.left)
-    var childTop = Math.floor(childRect.top)
+    positionsMap.set('top-', childTop + childRect.height + gap.y === Math.floor(parentRect.top))
+    positionsMap.set('right-', childLeft - gap.x === Math.floor(parentRect.right))
+    positionsMap.set('bottom-', childTop - gap.y === Math.floor(parentRect.bottom))
+    positionsMap.set('left-', childLeft + childRect.width + gap.x === Math.floor(parentRect.left))
 
-    // todo: loop all parent properties and apply math.floor to them
+    positionsMap.set('-top', childTop === Math.floor(parentRect.top))
+    positionsMap.set('-right', childLeft + childRect.width === Math.floor(parentRect.right))
+    positionsMap.set('-bottom', childTop + childRect.height === Math.floor(parentRect.bottom))
+    positionsMap.set('-left', childLeft === Math.floor(parentRect.left))
 
-    console.log('parentRect', parentRect)
-
-    Object.keys(parentRect).map(function(key) {
-        parentRect[key] = Math.abs(parentRect[key])
+    positionsMap.forEach(function(value, key) {
+        if (value) {
+            counter++
+            actualPosition += '-' + key.replace('-', '')
+        }
     })
 
-    console.log('parentRect', parentRect)
-
-    var left_ = childLeft + childRect.width + gap.x == Math.floor(parentRect.left);
-    var _left = childLeft === Math.floor(parentRect.left);
-
-    var right_ = childLeft - gap.x === Math.floor(parentRect.right);
-    var _right = childLeft + childRect.width === Math.floor(parentRect.right);
-
-    var bottom_ = childTop - gap.y === Math.floor(parentRect.bottom);
-    var _bottom = childTop + childRect.height === Math.floor(parentRect.bottom);
-
-    var top_ = childTop + childRect.height + gap.y === Math.floor(parentRect.top);
-    var _top = childTop === Math.floor(parentRect.top);
-
-    if (bottom_) {
-        actualStrategy += 'bottom';
-    }
-
-    if(right_) {
-        actualStrategy += 'right';
-    }
-
-    if(left_) {
-        actualStrategy += 'left';
-    }
-
-    if(top_) {
-        actualStrategy += 'top';
-    }
-
-    if (_bottom) {
-        actualStrategy += '-bottom';
-    }
-
-    if(_right) {
-        actualStrategy += '-right';
-    }
-
-    if(_left) {
-        actualStrategy += '-left';
-    }
-
-    if(_top) {
-        actualStrategy += '-top';
-    }
-
-    console.log('actualStrategy', actualStrategy)
-
-    return actualStrategy
+    return (!counter || counter > 2) ? '' : actualPosition
 }
 
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
@@ -109,9 +82,9 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
     var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    child.className = 'tw-popup ' + getActualPosition(rect,
-            {top, left, width: childWidth, height: childHeight},
-            {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)});
+    child.className = Popup.POPUP_CLASS_NAME + ' ' +
+            getActualPosition(rect, {top, left, width: childWidth, height: childHeight},
+                {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)})
 
     setPosition(child, left, top)
   }
