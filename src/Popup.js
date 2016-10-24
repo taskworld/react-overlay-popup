@@ -35,58 +35,60 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   }
 }
 
-export function getActualStrategy(parentRectangle, childRectangle, gap) {
+export function getActualStrategy(parentRect, childRect, gap) {
 
-    var actualStrategy = 'tw-strategy'
+    var actualStrategy = 'tw-strategy-'
 
-    console.log('parent', parentRectangle);
-    console.log('child', childRectangle);
+    var childLeft = Math.floor(childRect.left)
+    var childTop = Math.floor(childRect.top)
 
-    console.log('gap', gap);
+    var positions = []
 
-    var left_ = Math.floor(childRectangle.left) + childRectangle.width + Math.abs(gap.x) == Math.floor(parentRectangle.left); // good
-    var _left = Math.floor(childRectangle.left) === Math.floor(parentRectangle.left); // good
+    var left_ = childLeft + childRect.width + gap.x == Math.floor(parentRect.left);
+    var _left = childLeft === Math.floor(parentRect.left);
 
-    var _right = Math.floor(childRectangle.left) + childRectangle.width === Math.floor(parentRectangle.right); // good
-    var right_ = Math.floor(childRectangle.left) - Math.abs(gap.x) === Math.floor(parentRectangle.right); // good
+    var right_ = childLeft - gap.x === Math.floor(parentRect.right);
+    var _right = childLeft + childRect.width === Math.floor(parentRect.right);
 
-    var bottom_ = Math.floor(parentRectangle.bottom) + Math.abs(gap.y) === Math.floor(childRectangle.top); // good
-    var _bottom = Math.floor(childRectangle.top) + childRectangle.height === Math.floor(parentRectangle.bottom); // good
+    var bottom_ = childTop - gap.y === Math.floor(parentRect.bottom);
+    var _bottom = childTop + childRect.height === Math.floor(parentRect.bottom);
 
-    var _top = Math.floor(childRectangle.top) === Math.floor(parentRectangle.top);
-    var top_ = Math.floor(childRectangle.top) + childRectangle.height + Math.abs(gap.y) === Math.floor(parentRectangle.top);
+    var top_ = childTop + childRect.height + gap.y === Math.floor(parentRect.top);
+    var _top = childTop === Math.floor(parentRect.top);
 
     if (bottom_) {
-        console.log('bottom-');
-    }
-
-    if (_bottom) {
-        console.log('-bottom');
-    }
-
-    if(_right) {
-        console.log('-right');
+        actualStrategy += 'bottom';
     }
 
     if(right_) {
-        console.log('right-');
+        actualStrategy += 'right';
     }
 
     if(left_) {
-        console.log('left-');
-    }
-
-    if(_left) {
-        console.log('-left');
-    }
-
-    if(_top) {
-        console.log('-top')
+        actualStrategy += 'left';
     }
 
     if(top_) {
-        console.log('top-')
+        actualStrategy += 'top';
     }
+
+    if (_bottom) {
+        actualStrategy += '-bottom';
+    }
+
+    if(_right) {
+        actualStrategy += '-right';
+    }
+
+    if(_left) {
+        actualStrategy += '-left';
+    }
+
+    if(_top) {
+        actualStrategy += '-top';
+    }
+
+    console.log('actualStrategy', actualStrategy)
 
     return actualStrategy
 }
@@ -101,7 +103,7 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
     // child.className = 'tw-popup ' +
-    getActualStrategy(rect, {top, left, width: childWidth, height: childHeight}, {x: gapX * options.gap, y: gapY * options.gap})
+    getActualStrategy(rect, {top, left, width: childWidth, height: childHeight}, {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)})
 
     // console.log('child.className', child.className)
 
