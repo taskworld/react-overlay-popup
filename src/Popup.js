@@ -46,7 +46,7 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
  */
 export function getActualPosition(parentRect, childRect, gap) {
 
-    var actualPosition = 'tw-position',
+    var actualPositionClass = 'tw-position',
         childLeft = Math.floor(childRect.left),
         childTop = Math.floor(childRect.top),
         positionsMap = new Map(),
@@ -65,11 +65,11 @@ export function getActualPosition(parentRect, childRect, gap) {
     positionsMap.forEach(function(value, key) {
         if (value) {
             counter++
-            actualPosition += '-' + key.replace('-', '')
+            actualPositionClass += '-' + key.replace('-', '')
         }
     })
 
-    return (!counter || counter > 2) ? '' : actualPosition
+    return (!counter || counter > 2) ? '' : actualPositionClass
 }
 
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
