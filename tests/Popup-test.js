@@ -1,29 +1,69 @@
 import assert from 'assert'
 
-import { getActualStrategy } from '../src/Popup'
+import { getActualPosition } from '../src/Popup'
 
-describe('Testing output class of getActualStrategy function', function() {
+describe('Testing output class of getActualPosition function', function() {
 
-        var noGap = {x:0, y:0}
+        var noGap = {x: 0, y: 0}
 
-        it('Given positions where the child is below and left of parent, returns the left-top strategy class', function() {
-            var actual = getActualStrategy({top: 20, left: 70, bottom: 10, right: 10}, {top: 20, left: 30, width: 40, height: 40} , noGap)
-            assert(actual === 'tw-strategy-left-top', actual);
+        it('Given positions where the child is left (and center) of parent, returns the left position class', function() {
+            var actual = getActualPosition({top: 25, left: 70, bottom: 10, right: 10}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-left', actual);
         })
 
-        // it('Given positions where the child is below and right of parent, returns the bottom-right strategy class', function() {
-        //     var actual = getActualStrategy({top: 10, left: 10, width: 35, height: 25}, {top: 17, left: 17}, noGap)
-        //     assert( actual === 'tw-strategy-bottom-left', actual)
-        // })
-        //
-        // it('Given positions where the child is on top and left of parent, returns the top-left strategy class', function() {
-        //     var actual = getActualStrategy({top: 10, left: 10, width: 35, height: 25}, {top: 8, left: 3}, noGap)
-        //     assert( actual === 'tw-strategy-top-right', actual)
-        // })
-        //
-        // it('Given positions where the child is on top and right of parent, returns the top-right strategy class', function() {
-        //     var actual = getActualStrategy({top: 10, left: 10, width: 18, height: 56}, {top: 8, left: 20}, noGap)
-        //     assert(actual  === 'tw-strategy-top-left', actual)
-        // })
+        it('Given positions where the child is right (and center) of parent, returns the right position class', function() {
+            var actual = getActualPosition({top: 25, left: 100, bottom: 10, right: 30}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-right', actual);
+        })
+
+        it('Given positions where the child is top (and center) of parent, returns the top position class', function() {
+            var actual = getActualPosition({top: 60, left: 75, bottom: 10, right: 10}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-top', actual);
+        })
+
+        it('Given positions where the child is at bottom (and center) of parent, returns the bottom position class', function() {
+            var actual = getActualPosition({top: 25, left: 25, bottom: 20, right: 15}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-bottom', actual);
+        })
+
+        it('Given positions where the child is below and starts on left side of parent, returns the left-top position class', function() {
+            var actual = getActualPosition({top: 20, left: 70, bottom: 10, right: 10}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-left-top', actual);
+        })
+
+        it('Given positions where the child is below and starts on right side of parent, returns the right-top position class', function() {
+            var actual = getActualPosition({top: 20, left: 75, bottom: 10, right: 30}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-right-top', actual);
+        })
+
+        it('Given positions where the child is on top and starts on left side of parent, returns the left-bottom position class', function() {
+            var actual = getActualPosition({top: 21, left: 70, bottom: 60, right: 12}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-left-bottom', actual);
+        })
+
+        it('Given positions where the child is below and starts on right side of parent, returns the right-bottom position class', function() {
+            var actual = getActualPosition({top: 10, left: 75, bottom: 60, right: 30}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-right-bottom', actual);
+        })
+
+        it('Given positions where the child is on top and starts on left side of parent, returns the top-left position class', function() {
+            var actual = getActualPosition({top: 60, left: 70, bottom: 12, right: 12}, {top: 20, left: 70, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-top-left', actual);
+        })
+
+        it('Given positions where the child is on top and starts on right side of parent, returns the top-right position class', function() {
+            var actual = getActualPosition({top: 60, left: 55, bottom: 12, right: 60}, {top: 20, left: 20, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-top-right', actual);
+        })
+
+        it('Given positions where the child is at bottom and starts on right of parent, returns the bottom-right position class', function() {
+            var actual = getActualPosition({top: 26, left: 55, bottom: 20, right: 70}, {top: 20, left: 30, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-bottom-right', actual);
+        })
+
+        it('Given positions where the child is at bottom and starts on left of parent, returns the bottom-left position class', function() {
+            var actual = getActualPosition({top: 26, left: 55, bottom: 20, right: 78}, {top: 20, left: 55, width: 40, height: 40} , noGap)
+            assert(actual === 'tw-position-bottom-left', actual);
+        })
 
 })

@@ -14,10 +14,6 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   var primary = kp !== kc
   var vc = calculate(vp, lp, lc, kp, kc, Δv)
 
-  // console.log(vc + lc === vp + lp);
-
-// console.log('vc, vp, lp, lc, kp, kc, vm, Δv', vc, vp, lp, lc, kp, kc, vm, Δv);
-
   if (primary) {
     if ((kp > 0.5 && vc + lc > vm) || (kp < 0.5 && vc < 0)) {
       return calculate(vp, lp, lc, 1 - kp, 1 - kc, -Δv)
@@ -35,14 +31,25 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   }
 }
 
-export function getActualStrategy(parentRect, childRect, gap) {
+/**
+*
+*/
+export function getActualPosition(parentRect, childRect, gap) {
 
-    var actualStrategy = 'tw-strategy-'
+    var actualStrategy = 'tw-position-'
 
     var childLeft = Math.floor(childRect.left)
     var childTop = Math.floor(childRect.top)
 
-    var positions = []
+    // todo: loop all parent properties and apply math.floor to them
+
+    console.log('parentRect', parentRect)
+
+    Object.keys(parentRect).map(function(key) {
+        parentRect[key] = Math.abs(parentRect[key])
+    })
+
+    console.log('parentRect', parentRect)
 
     var left_ = childLeft + childRect.width + gap.x == Math.floor(parentRect.left);
     var _left = childLeft === Math.floor(parentRect.left);
@@ -102,10 +109,9 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
     var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    // child.className = 'tw-popup ' +
-    getActualStrategy(rect, {top, left, width: childWidth, height: childHeight}, {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)})
-
-    // console.log('child.className', child.className)
+    child.className = 'tw-popup ' + getActualPosition(rect,
+            {top, left, width: childWidth, height: childHeight},
+            {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)});
 
     setPosition(child, left, top)
   }
