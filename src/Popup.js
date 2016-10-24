@@ -31,7 +31,7 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
 }
 
 /**
- * getActualPosition - positioning strategy only specified the preferred positioning
+ * getActualPosition -  positioning strategy only specifies the *preferred* strategy
  *                     of the child popup. When the popup is rendered, it might
  *                     reposition to the closest strategy that allows it to still
  *                     be rendered on screen.
