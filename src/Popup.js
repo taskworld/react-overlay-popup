@@ -10,7 +10,6 @@ function calculate (vp, lp, lc, kp, kc, Δv) {
 }
 
 function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
-
   var primary = kp !== kc
   var vc = calculate(vp, lp, lc, kp, kc, Δv)
 
