@@ -90,9 +90,6 @@ function createStrategyFromFunction (positionFunc) {
 }
 
 function setPosition (child, left, top, positionClass) {
-
-  console.log('positionClass', positionClass)
-
   child.className = Popup.POPUP_CLASS_NAME + ' ' + positionClass
   child.style.visibility = 'visible'
   child.style.left = left + 'px'
