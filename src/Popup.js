@@ -31,27 +31,32 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
 }
 
 /**
+* Google Chrome returns floating values for a boundingRect when zooming in/out
+*/
+function floorRectangle(rect) {
+    return {
+        top: Math.floor(rect.top),
+        right: Math.floor(rect.right),
+        bottom: Math.floor(rect.bottom),
+        left: Math.floor(rect.left),
+        width: Math.floor(rect.width),
+        height: Math.floor(rect.height)
+    }
+}
+
+/**
  * getActualPosition -  positioning strategy only specifies the *preferred* strategy
  *                     of the child popup. When the popup is rendered, it might
  *                     reposition to the closest strategy that allows it to still
  *                     be rendered on screen.
- *                     This method returns the actual positioning used (out of all
- *                     the strategies available)
- *
- * @param  {Object} parentRect - an Object with top,right,bottom,left integer vaues for parent
- * @param  {Object} ChildRect - an object with left,top,width, height for child / popup integer values
- * @param {Object} gap - an object with x and y absolute gap values (positive numbers)
- * @return String - a string that identifies the actual positioning strategy used
+ *                     This method returns a class which refers to the actual strategy used
  */
 export function getActualPosition(parentRect, childRect, gap) {
-
     var classPrefix = 'tw-position-',
-
         base = childRect.top + childRect.height + gap.y === parentRect.top ? 'top' :
             childRect.left - gap.x === parentRect.right ? 'right' :
             childRect.top - gap.y === parentRect.bottom ? 'bottom' :
             childRect.left + childRect.width + gap.x === parentRect.left ? 'left' : '',
-
         complement = childRect.top === parentRect.top ? 'top' :
             childRect.left + childRect.width === parentRect.right ? 'right' :
             childRect.top + childRect.height === parentRect.bottom ? 'bottom' :
@@ -62,19 +67,16 @@ export function getActualPosition(parentRect, childRect, gap) {
 
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
   return function (parent, child, options) {
-    var rect = parent.getBoundingClientRect()
+    var parentRect = parent.getBoundingClientRect()
     var childWidth = child.offsetWidth
     var childHeight = child.offsetHeight
 
-    var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
-    var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
+    var left = calculateWithFallback(parentRect.left, parentRect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
+    var top = calculateWithFallback(parentRect.top, parentRect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    var positionClass = getActualPosition({top: Math.floor(rect.top), right: Math.floor(rect.right),
-                                              bottom: Math.floor(rect.bottom), left: Math.floor(rect.left)},
-                                          {top: Math.floor(top), left: Math.floor(left),
-                                              width: childWidth, height: childHeight},
-                                          {x: Math.abs(gapX * options.gap),
-                                              y: Math.abs(gapY * options.gap)})
+    var childRect = floorRectangle({top,left, width: childWidth, height: childHeight}),
+        absGap = {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)},
+        positionClass = getActualPosition(floorRectangle(parentRect), childRect, absGap)
 
     setPosition(child, left, top, positionClass)
   }
@@ -88,6 +90,9 @@ function createStrategyFromFunction (positionFunc) {
 }
 
 function setPosition (child, left, top, positionClass) {
+
+  console.log('positionClass', positionClass)
+
   child.className = Popup.POPUP_CLASS_NAME + ' ' + positionClass
   child.style.visibility = 'visible'
   child.style.left = left + 'px'
