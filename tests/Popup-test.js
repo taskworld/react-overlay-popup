@@ -1,8 +1,8 @@
 import assert from 'assert'
 
-import { getActualPosition } from '../src/Popup'
+import { getActualPosition, calculate, calculateWithFallback } from '../src/Popup'
 
-describe('Testing output class of getActualPosition function', function() {
+describe('Testing output css class of getActualPosition function', function() {
 
         // not accounting for gap. x/y can't be same values except when 0
         var noGap = {x: 0, y: 0}
@@ -67,4 +67,38 @@ describe('Testing output class of getActualPosition function', function() {
             assert(actual === 'tw-position-bottom-left', actual)
         })
 
+})
+
+
+describe('testing calculate', function() {
+    it('Given multiple combinations of args to calculate, assert it returns expected value ', function() {
+        var actual = calculate(142.5, 36, 56, 1, 0, 4)
+         assert(182.5 === actual, actual)
+
+        actual = calculate(631.5, 60.5, 162, 1, 1, 0)
+        assert(530 === actual, actual)
+
+        actual = calculate(21, 95.5, 162, 0.5, 0.5, 0)
+        assert(-12.25 === actual, actual)
+
+    })
+})
+
+describe('testing calculateWithFallback', function() {
+    it('Given multiple combinations of args to calculateWithFallback, assert returns expected value ', function(){
+        var actual = calculateWithFallback(648.5, 55.75, 162, 0.5, 0.5, 692, 0)
+        assert(542.25 === actual, actual)
+
+        actual = calculateWithFallback(145, 36, 56, 1, 0, 796, 4)
+        assert(185 === actual, actual)
+
+        actual = calculateWithFallback(229.5, 95.5, 162, 0.5, 0.5, 692, 0)
+        assert(196.25 === actual, actual)
+
+        actual = calculateWithFallback(0.5, 21, 56, 1, 0, 796, 4)
+        assert(25.5 === actual, actual)
+
+        actual = calculateWithFallback(71.5, 95.5, 162, 0.5, 0.5, 692, 0)
+        assert(38.25 === actual, actual)
+    })
 })

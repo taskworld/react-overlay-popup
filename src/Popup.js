@@ -5,11 +5,12 @@ import Overlay from './Overlay'
 
 var _strategies = { }
 
-function calculate (vp, lp, lc, kp, kc, Δv) {
+export function calculate (vp, lp, lc, kp, kc, Δv) {
+    console.log(vp, lp, lc, kp, kc, Δv)
   return vp + kp * lp - kc * lc + Δv
 }
 
-function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
+export function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   var primary = kp !== kc
   var vc = calculate(vp, lp, lc, kp, kc, Δv)
 
