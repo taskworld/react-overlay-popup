@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import invar from 'invariant'
 import Overlay from './Overlay'
 
-var _strategies = { }
+var _strategies = {}
 
 export function calculate (vp, lp, lc, kp, kc, Δv) {
   return vp + kp * lp - kc * lc + Δv
@@ -32,16 +32,17 @@ export function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
 
 /**
 * Google Chrome returns floating values for a boundingRect when zooming in/out
+* Unable to loop/reduce/get keys for properties of special DOMRect Object
 */
 function floorRectangle(rect) {
-    return {
-        top: Math.floor(rect.top),
-        right: Math.floor(rect.right),
-        bottom: Math.floor(rect.bottom),
-        left: Math.floor(rect.left),
-        width: Math.floor(rect.width),
-        height: Math.floor(rect.height)
-    }
+  return {
+    top: Math.floor(rect.top),
+    right: Math.floor(rect.right),
+    bottom: Math.floor(rect.bottom),
+    left: Math.floor(rect.left),
+    width: Math.floor(rect.width),
+    height: Math.floor(rect.height)
+  }
 }
 
 /**
@@ -52,15 +53,21 @@ function floorRectangle(rect) {
  *                     This method returns a class which refers to the actual strategy used
  */
 export function getActualPosition(parentRect, childRect, gap) {
-    var classPrefix = 'tw-position-',
-        base = childRect.top + childRect.height + gap.y === parentRect.top ? 'top' :
-            childRect.left - gap.x === parentRect.right ? 'right' :
-            childRect.top - gap.y === parentRect.bottom ? 'bottom' :
-            childRect.left + childRect.width + gap.x === parentRect.left ? 'left' : '',
-        complement = childRect.top === parentRect.top ? 'top' :
-            childRect.left + childRect.width === parentRect.right ? 'right' :
-            childRect.top + childRect.height === parentRect.bottom ? 'bottom' :
-            childRect.left === parentRect.left ? 'left' : 'center'
+
+  parentRect = floorRectangle(parentRect)
+  childRect = floorRectangle(childRect)
+  gap.x = Math.abs(gap.x)
+  gap.y = Math.abs(gap.y)
+
+  var classPrefix = 'tw-position-',
+    base = childRect.top + childRect.height + gap.y === parentRect.top ? 'top' :
+      childRect.left - gap.x === parentRect.right ? 'right' :
+      childRect.top - gap.y === parentRect.bottom ? 'bottom' :
+      childRect.left + childRect.width + gap.x === parentRect.left ? 'left' : '',
+    complement = childRect.top === parentRect.top ? 'top' :
+      childRect.left + childRect.width === parentRect.right ? 'right' :
+      childRect.top + childRect.height === parentRect.bottom ? 'bottom' :
+      childRect.left === parentRect.left ? 'left' : 'center'
 
     return classPrefix + base + '-' + complement
 }
@@ -74,9 +81,9 @@ function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
     var left = calculateWithFallback(parentRect.left, parentRect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
     var top = calculateWithFallback(parentRect.top, parentRect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    var childRect = floorRectangle({top,left, width: childWidth, height: childHeight}),
-        absGap = {x: Math.abs(gapX * options.gap), y: Math.abs(gapY * options.gap)},
-        positionClass = getActualPosition(floorRectangle(parentRect), childRect, absGap)
+    var positionClass = getActualPosition(parentRect,
+        {top, left, width: childWidth, height: childHeight},
+        {x: gapX * options.gap, y: gapY * options.gap})
 
     setPosition(child, left, top, positionClass)
   }
