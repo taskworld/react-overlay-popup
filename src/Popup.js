@@ -69,7 +69,7 @@ export function getActualPosition(parentRect, childRect, gap) {
       childRect.top + childRect.height === parentRect.bottom ? 'bottom' :
       childRect.left === parentRect.left ? 'left' : 'center'
 
-    return classPrefix + base + '-' + complement
+  return classPrefix + base + '-' + complement
 }
 
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
