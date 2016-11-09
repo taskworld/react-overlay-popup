@@ -6,7 +6,6 @@ import Overlay from './Overlay'
 var _strategies = { }
 
 export function calculate (vp, lp, lc, kp, kc, Δv) {
-    console.log(vp, lp, lc, kp, kc, Δv)
   return vp + kp * lp - kc * lc + Δv
 }
 
