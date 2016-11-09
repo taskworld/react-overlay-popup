@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom'
 import invar from 'invariant'
 import Overlay from './Overlay'
 
-var _strategies = { }
+var _strategies = {}
 
-function calculate (vp, lp, lc, kp, kc, Δv) {
+export function calculate (vp, lp, lc, kp, kc, Δv) {
   return vp + kp * lp - kc * lc + Δv
 }
 
-function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
+export function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   var primary = kp !== kc
   var vc = calculate(vp, lp, lc, kp, kc, Δv)
 
@@ -30,16 +30,62 @@ function calculateWithFallback (vp, lp, lc, kp, kc, vm, Δv) {
   }
 }
 
+/**
+* Google Chrome returns floating values for a boundingRect when zooming in/out
+* Unable to loop/reduce/get keys for properties of special DOMRect Object
+*/
+function floorRectangle(rect) {
+  return {
+    top: Math.floor(rect.top),
+    right: Math.floor(rect.right),
+    bottom: Math.floor(rect.bottom),
+    left: Math.floor(rect.left),
+    width: Math.floor(rect.width),
+    height: Math.floor(rect.height)
+  }
+}
+
+/**
+ * getActualPosition -  positioning strategy only specifies the *preferred* strategy
+ *                     of the child popup. When the popup is rendered, it might
+ *                     reposition to the closest strategy that allows it to still
+ *                     be rendered on screen.
+ *                     This method returns a class which refers to the actual strategy used
+ */
+export function getActualPosition(parentRect, childRect, gap) {
+
+  parentRect = floorRectangle(parentRect)
+  childRect = floorRectangle(childRect)
+  gap.x = Math.abs(gap.x)
+  gap.y = Math.abs(gap.y)
+
+  var classPrefix = 'tw-position-',
+    base = childRect.top + childRect.height + gap.y === parentRect.top ? 'top' :
+      childRect.left - gap.x === parentRect.right ? 'right' :
+      childRect.top - gap.y === parentRect.bottom ? 'bottom' :
+      childRect.left + childRect.width + gap.x === parentRect.left ? 'left' : '',
+    complement = childRect.top === parentRect.top ? 'top' :
+      childRect.left + childRect.width === parentRect.right ? 'right' :
+      childRect.top + childRect.height === parentRect.bottom ? 'bottom' :
+      childRect.left === parentRect.left ? 'left' : 'center'
+
+  return classPrefix + base + '-' + complement
+}
+
 function createStrategy (parentX, childX, parentY, childY, gapX, gapY) {
   return function (parent, child, options) {
-    var rect = parent.getBoundingClientRect()
+    var parentRect = parent.getBoundingClientRect()
     var childWidth = child.offsetWidth
     var childHeight = child.offsetHeight
 
-    var left = calculateWithFallback(rect.left, rect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
-    var top = calculateWithFallback(rect.top, rect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
+    var left = calculateWithFallback(parentRect.left, parentRect.width, childWidth, parentX, childX, window.innerWidth, gapX * options.gap)
+    var top = calculateWithFallback(parentRect.top, parentRect.height, childHeight, parentY, childY, window.innerHeight, gapY * options.gap)
 
-    setPosition(child, left, top)
+    var positionClass = getActualPosition(parentRect,
+        {top, left, width: childWidth, height: childHeight},
+        {x: gapX * options.gap, y: gapY * options.gap})
+
+    setPosition(child, left, top, positionClass)
   }
 }
 
@@ -50,7 +96,8 @@ function createStrategyFromFunction (positionFunc) {
   }
 }
 
-function setPosition (child, left, top) {
+function setPosition (child, left, top, positionClass) {
+  child.className = Popup.POPUP_CLASS_NAME + ' ' + positionClass
   child.style.visibility = 'visible'
   child.style.left = left + 'px'
   child.style.top = top + 'px'
@@ -133,4 +180,4 @@ var Popup = React.createClass({
 
 Popup.POPUP_CLASS_NAME = 'tw-popup'
 
-module.exports = Popup
+export default Popup
