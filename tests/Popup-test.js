@@ -71,7 +71,7 @@ describe('Testing output css class of getActualPosition function', function() {
 
 
 describe('testing calculate', function() {
-    it('Given multiple combinations of args to calculate, assert it returns expected value ', function() {
+    it('Given multiple combinations of args to calculate, assert that it returns expected values', function() {
         var actual = calculate(142.5, 36, 56, 1, 0, 4)
          assert(182.5 === actual, actual)
 
@@ -85,7 +85,7 @@ describe('testing calculate', function() {
 })
 
 describe('testing calculateWithFallback', function() {
-    it('Given multiple combinations of args to calculateWithFallback, assert returns expected value ', function(){
+    it('Given multiple combinations of args to calculateWithFallback, assert that it returns expected values', function(){
         var actual = calculateWithFallback(648.5, 55.75, 162, 0.5, 0.5, 692, 0)
         assert(542.25 === actual, actual)
 
